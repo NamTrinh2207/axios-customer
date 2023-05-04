@@ -2,8 +2,8 @@ import './App.css';
 import CreateCustomer from "./component/CreateCustomer";
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
 import ListCustomers from "./component/ListCustomers";
-import Update from "./component/Update";
 import Navigation from "./component/Directional";
+import UpdateCustomer from "./component/Update";
 
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
             <Navigation/>
             <Routes>
                 <Route path={"/"} element={<ListCustomers/>}></Route>
-                <Route path={"/update"} element={<Update/>}></Route>
+                <Route path={"/update/:id"} element={<UpdateCustomer/>}></Route>
                 <Route path={"/create"} element={<CreateCustomer/>}></Route>
             </Routes>
         </Router>

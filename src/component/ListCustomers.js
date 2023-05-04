@@ -1,7 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import axios from 'axios';
+import {Link, useNavigate} from "react-router-dom";
+
 const ListCustomers = () => {
     const [customers, setCustomers] = useState([]);
+    const navigate = useNavigate();
+    const [check, setCheck] = useState(true);
     useEffect(() => {
         axios.get("http://localhost:8080/customers")
             .then(function (response) {
@@ -10,10 +14,10 @@ const ListCustomers = () => {
             .catch(function (error) {
                 console.log(error)
             })
-    }, [])
+    }, [check])
 
     return (
-        <table>
+        <table border={1}>
             <thead>
             <tr>
                 <th>Name</th>
@@ -31,19 +35,22 @@ const ListCustomers = () => {
                     <td>{customer.email}</td>
                     <td>{customer.address}</td>
                     <td><button onClick={() => {deleteCustomer(customer.id)}}>Delete</button></td>
+                    <td><Link to={`/update/` + customer.id}>Update</Link></td>
                 </tr>))
             }
             </tbody>
         </table>
     )
-};
-function deleteCustomer(id) {
+
+    function deleteCustomer(id) {
         axios.delete(`http://localhost:8080/customers/delete/${id}`)
             .then(response => {
-                return response.data;
+                navigate("/")
+                setCheck(!check)
             })
             .catch(function (error) {
                 console.log(error)
             })
-}
+    }
+};
 export default ListCustomers;

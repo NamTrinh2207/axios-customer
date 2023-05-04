@@ -8,9 +8,6 @@ function Navigation() {
                     <Link to="/">Home</Link>
                 </li>
                 <li>
-                    <Link to="/update">Layout</Link>
-                </li>
-                <li>
                     <Link to="/create">Signup Form</Link>
                 </li>
             </ul>
