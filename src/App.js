@@ -1,9 +1,9 @@
 import './App.css';
 import CreateCustomer from "./component/CreateCustomer";
 import {BrowserRouter as Router, Routes, Route} from "react-router-dom";
-import ListCustomers from "./component/ListCustomers";
 import Navigation from "./component/Directional";
 import UpdateCustomer from "./component/Update";
+import ListCustomers from "./component/ListCustomers";
 
 
 function App() {

@@ -1,30 +1,32 @@
-import React, { useEffect, useState } from 'react';
-import { ErrorMessage, Field, Formik } from 'formik';
-import * as yup from 'yup';
-import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
-import './../style/SignupStyle.css';
+import {useNavigate, useParams} from "react-router-dom";
+import {useEffect, useState} from "react";
+import axios from "axios";
+import * as yup from "yup";
+import {ErrorMessage, Field, Formik} from "formik";
 
 const UpdateCustomer = () => {
-    const { id } = useParams();
+    const {id} = useParams();
     const navigate = useNavigate();
-    const [customer, setCustomer] = useState([]);
+    const [customer, setCustomer] = useState({});
+    const [loading, setLoading] = useState(true); // thêm biến loading
 
     useEffect(() => {
-        axios.get(`http://localhost:8080/customers/${id}`)
+        axios
+            .get(`http://localhost:8080/customers/${id}`)
             .then((response) => {
                 setCustomer(response.data);
+                setLoading(false); // đánh dấu dữ liệu đã được tải lên
             })
             .catch((error) => {
                 console.log(error);
             });
-    }, []);
+    }, [id]);
 
     const initialValues = {
-        name:  '',
-        email:  '',
-        address:  '',
-        phone:'',
+        name: customer.name || '',
+        email: customer.email || '',
+        address: customer.address || '',
+        phone: customer.phone || '',
     };
 
     const validationSchema = yup.object({
@@ -40,35 +42,39 @@ const UpdateCustomer = () => {
             .required('A phone number is required'),
     });
 
-    const handleSubmit = (values) => {
-        axios
-            .put(`http://localhost:8080/customers/update/${id}`, values)
-            .then(() => {
-                navigate('/');
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    };
-
+    if (loading) {
+        return <div>Loading...</div>; // Nếu dữ liệu chưa tải lên thì hiển thị thông báo loading
+    }
     return (
         <div>
-            <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
+            <Formik
+                initialValues={initialValues}
+                validationSchema={validationSchema}
+                onSubmit={(values) => {
+                    axios
+                        .put(`http://localhost:8080/customers/update/${id}`, values)
+                        .then(() => {
+                            navigate('/');
+                        })
+                        .catch((error) => {
+                            console.log(error);
+                        });
+                }}>
                 {(formik) => (
                     <form onSubmit={formik.handleSubmit}>
-                        <Field name="name" defaultValue={customer.name} />
-                        <ErrorMessage name="name" />
+                        <Field name={'name'}></Field>
+                        <ErrorMessage name="name"/>
 
-                        <Field name="email" defaultValue={customer.email} />
-                        <ErrorMessage name="email" />
+                        <Field name={'email'}></Field>
+                        <ErrorMessage name="email"/>
 
-                        <Field name="address" defaultValue={customer.address} />
-                        <ErrorMessage name="address" />
+                        <Field name={'address'}></Field>
+                        <ErrorMessage name="address"/>
 
-                        <Field name="phone" defaultValue={customer.phone} />
-                        <ErrorMessage name="phone" />
+                        <Field name={'phone'}></Field>
+                        <ErrorMessage name="phone"/>
 
-                        <button type="submit">Update Customer</button>
+                        <button>Update Customer</button>
                     </form>
                 )}
             </Formik>
